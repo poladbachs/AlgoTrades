@@ -1,3 +1,1 @@
-# QuantCpp
-# AlgoTrades
-# AlgoTrades
+Algorithmic Trading with Python Personal Workshop
