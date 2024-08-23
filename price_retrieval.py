@@ -41,3 +41,18 @@ def get_daily_historic_data_yahoo(
     yahoo_url = "http://ichart.finance.yahoo.com/table.csv"
     yahoo_url += "?s=%s&a=%s&b=%s&c=%s&d=%s&e=%s&f=%s"
     yahoo_url = yahoo_url % ticker_tup
+
+    # Try connecting to Yahoo Finance and obtaining the data
+    # On failure, print an error message.
+    try:
+        yf_data = requests.get(yahoo_url).text.split("\n")[1:-1] 
+        prices = []
+        for y in yf_data:
+            p = y.strip().split(',') 
+            prices.append(
+                (datetime.datetime.strptime(p[0], '%Y-%m-%d'),
+                p[1], p[2], p[3], p[4], p[5], p[6])
+            )
+    except Exception as e:
+        print("Could not download Yahoo data: %s" % e)
+    return prices
