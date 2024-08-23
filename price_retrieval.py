@@ -76,3 +76,17 @@ def insert_daily_data_into_db(
         d[1], d[2], d[3], d[4], d[5], d[6])
         for d in daily_data 
     ]
+
+    # Create the insert strings
+    column_str = """data_vendor_id, symbol_id, price_date, created_date,
+                last_updated_date, open_price, high_price, low_price,
+                close_price, volume, adj_close_price"""
+    insert_str = ("%s, " * 11)[:-2]
+    final_str = "INSERT INTO daily_price (%s) VALUES (%s)" % \
+        (column_str, insert_str)
+    
+    # Using the MySQL connection, carry out an INSERT INTO for every symbol
+    with con:
+        cur = con.cursor()
+        cur.executemany(final_str, daily_data)
+
