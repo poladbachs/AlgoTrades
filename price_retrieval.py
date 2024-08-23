@@ -90,3 +90,20 @@ def insert_daily_data_into_db(
         cur = con.cursor()
         cur.executemany(final_str, daily_data)
 
+    if __name__ == "__main__":
+        # This ignores the warnings regarding Data Truncation 
+        # from the Yahoo precision to Decimal(19,4) datatypes
+        warnings.filterwarnings('ignore')
+        # Loop over the tickers and insert the daily historical 
+        # data into the database
+        tickers = obtain_list_of_db_tickers()
+        lentickers = len(tickers)
+        for i, t in enumerate(tickers):
+            print(
+                "Adding data for %s: %s out of %s" %
+                (t[1], i+1, lentickers)
+            )
+            yf_data = get_daily_historic_data_yahoo(t[1])
+            insert_daily_data_into_db('1', t[0], yf_data)
+        print("Successfully added Yahoo finance pricing data to DB.")
+
