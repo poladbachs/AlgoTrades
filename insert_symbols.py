@@ -35,15 +35,15 @@ def obtain_parse_wiki_snp500():
     symbols = []
     for i, symbol in enumerate(symbolslist):
         tds = symbol.select('td')
-        symbols.append(
-            (
-                tds[0].select('a')[0].text, # Ticker
-                'stock',
-                tds[1].select('a')[0].text, # Name,
-                tds[3].text, # Sector
-                'USD', now, now
-            )
+        symbol_data = (
+            tds[0].select('a')[0].text, # Ticker
+            'stock',
+            tds[1].select('a')[0].text, # Name,
+            tds[3].text, # Sector
+            'USD', now, now
         )
+        print(f"Adding symbol: {symbol_data}")  # Debug print
+        symbols.append(symbol_data)
     return symbols
 
 def insert_snp500_symbols(symbols):
@@ -72,6 +72,7 @@ def insert_snp500_symbols(symbols):
     with con:
         cur = con.cursor()
         cur.executemany(final_str, symbols)
+        con.commit()
 
 if __name__ == "__main__":
     symbols = obtain_parse_wiki_snp500()
