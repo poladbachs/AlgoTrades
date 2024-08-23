@@ -44,6 +44,33 @@ def obtain_parse_wiki_snp500():
                 'USD', now, now
             )
         )
-        return symbols
+    return symbols
+
+def insert_snp500_symbols(symbols):
+    """
+    Insert the S&P500 symbols into the MySQL database.
+    """
+    # Connect to the MySQL instance
+    db_host = 'localhost'
+    db_user = 'sec_user'
+    db_pass = 'password'
+    db_name = 'securities_master'
+    con = mdb.connect(
+        host=db_host, user=db_user, passwd=db_pass, db=db_name
+    )
+
+    # Create the insert strings
+    column_str = """ticker, instrument, name, sector, 
+                 currency, created_date, last_updated_date
+                 """
+    insert_str = ("%s, " * 7)[:-2]
+    final_str = "INSERT INTO symbol (%s) VALUES (%s)" % \
+        (column_str, insert_str)
+
+    # Using the MySQL connection, carry out 
+    # an INSET INTO for every symbol
+    with con:
+        cur = con.cursor()
+        cur.executemany(final_str, symbols)
 
 
