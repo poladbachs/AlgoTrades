@@ -30,6 +30,20 @@ def obtain_parse_wiki_snp500():
     # and then ignores the header row ([1:])
     symbolslist = soup.select('table')[0].select('tr')[1:]
 
-
+    # Obtain the symbol information for each 
+    # row in the S&P500 constituent table
+    symbols = []
+    for i, symbol in enumerate(symbolslist):
+        tds = symbol.select('td')
+        symbols.append(
+            (
+                tds[0].select('a')[0].text, # Ticker
+                'stock',
+                tds[1].select('a')[0].text, # Name,
+                tds[3].text, # Sector
+                'USD', now, now
+            )
+        )
+        return symbols
 
 
