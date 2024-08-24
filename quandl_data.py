@@ -22,7 +22,7 @@ def construct_futures_symbols(symbol, start_year=2020, end_year=2024):
     return futures
 
 # Function to download a contract from Nasdaq Data Link
-def download_contract_from_quandl(contract, dl_dir, api_key):
+def download_contract_from_nasdaq(contract, dl_dir, api_key):
     """
     Download an individual futures contract from Nasdaq Data Link and then
     store it to disk in the 'dl_dir' directory.
@@ -45,3 +45,12 @@ def download_contract_from_quandl(contract, dl_dir, api_key):
         print(f"Successfully downloaded contract: {contract}")
     else:
         print(f"Failed to download data for contract {contract}. HTTP Status: {response.status_code}")
+
+# Function to download all contracts within a date range
+def download_historical_contracts(symbol, dl_dir, start_year=2020, end_year=2024, api_key=API_KEY):
+    """
+    Downloads all futures contracts for a specified symbol between a start_year and an end_year.
+    """
+    contracts = construct_futures_symbols(symbol, start_year, end_year)
+    for c in contracts:
+        download_contract_from_nasdaq(c, dl_dir, api_key)
