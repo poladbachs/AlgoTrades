@@ -34,3 +34,14 @@ def download_contract_from_quandl(contract, dl_dir, api_key):
 
     # Download the data from Nasdaq Data Link
     response = requests.get(full_url)
+
+    if response.status_code == 200:
+        data = response.text
+        # Ensure the link exists
+        os.makedirs(dl_dir, exist_ok=True)
+        # Store the data to disk
+        with open(f'{dl_dir}/{contract}.csv', 'w') as fc:
+            fc.write(data)
+        print(f"Successfully downloaded contract: {contract}")
+    else:
+        print(f"Failed to download data for contract {contract}. HTTP Status: {response.status_code}")
