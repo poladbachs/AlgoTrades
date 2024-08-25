@@ -3,7 +3,7 @@ from __future__ import print_function
 import datetime
 import numpy as np 
 import pandas as pd
-import Quandl
+import quandl
 
 def futures_rollover_weights(start_date, expiry_dates, contracts, rollover_days=5):
     """This constructs a pandas DataFrame that contains weights (between 0.0 and 1.0) 
@@ -41,3 +41,24 @@ def futures_rollover_weights(start_date, expiry_dates, contracts, rollover_days=
             roll_weights.ix[prev_date:, item] = 1
         prev_date = ex_date
     return roll_weights
+
+if __name__ == "__main__":
+    # Download the current Front and Back (near and far) futures contracts 
+    # for WTI Crude, traded on NYMEX, from Quandl.com. You will need to
+    # adjust the contracts to reflect your current near/far contracts 
+    # depending upon the point at which you read this!
+    wti_near = quandl.get("OFDP/FUTURE_CLF2014")
+    wti_far = quandl.get("OFDP/FUTURE_CLG2014")
+    wti = pd.DataFrame({'CLF2014': wti_near['Settle'],
+                        'CLG2014': wti_far['Settle']}, index=wti_far.index)
+
+    # Create the dictionary of expiry dates for each contract
+    expiry_dates = pd.Series(
+        {'CLF2014': datetime.datetime(2013, 12, 19),
+    'CLG2014': datetime.datetime(2014, 2, 21)}).order()
+    # Obtain the rollover weighting matrix/DataFrame
+    weights = futures_rollover_weights(wti_near.index[0], expiry_dates, wti.columns)
+    # Construct the continuous future of the WTI CL contracts
+    wti_cts = (wti * weights).sum(1).dropna()
+    # Output the merged series of contract settle prices
+    print(wti_cts.tail(60))
