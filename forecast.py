@@ -74,3 +74,29 @@ if __name__ == "__main__":
 
     # The test data is split into two parts: Before and after 1st Jan 2015.
     start_test = datetime.datetime(2015,1,1)
+
+    # Create training and test sets
+    X_train = X[X.index < start_test]
+    X_test = X[X.index >= start_test]
+    y_train = y[y.index < start_test]
+    y_test = y[y.index >= start_test]
+
+    # Create the (parametrised) models
+    print("Hit Rates/Confusion Matrices:\n") 
+    models = [("LR", LogisticRegression()),
+              ("LDA", LDA()),
+              ("QDA", QDA()),
+              ("LSVC", LinearSVC()),
+              ("RSVM", SVC(
+                C=1000000.0, cache_size=200, class_weight=None, 
+                coef0=0.0, degree=3, gamma=0.0001, kernel='rbf',
+                max_iter=-1, probability=False, random_state=None,
+                shrinking=True, tol=0.001, verbose=False)
+              ),
+              ("RF", RandomForestClassifier(
+                n_estimators=1000, criterion='gini',
+                max_depth=None, min_samples_split=2,
+                min_samples_leaf=1, max_features='auto',
+                bootstrap=True, oob_score=False, n_jobs=1,
+                random_state=None, verbose=0)
+              )]
