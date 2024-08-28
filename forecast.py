@@ -43,3 +43,14 @@ def create_lagged_series(symbol, start_date, end_date, lags=5):
     tsret["Volume"] = tslag["Volume"]
     tsret["Today"] = tslag["Today"].pct_change()*100.0
 
+    # If any of the values of percentage returns equal zero, set them to 
+    # a small number (stops issues with QDA model in Scikit-Learn)
+    for i,x in enumerate(tsret["Today"]):
+        if (abs(x) < 0.0001): 
+            tsret["Today"][i] = 0.0001
+
+    # Create the lagged percentage returns columns
+    for i in range(0, lags):
+        tsret["Lag%s" % str(i+1)] = \
+        tslag["Lag%s" % str(i+1)].pct_change()*100.0
+
