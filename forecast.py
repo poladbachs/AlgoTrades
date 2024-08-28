@@ -59,3 +59,18 @@ def create_lagged_series(symbol, start_date, end_date, lags=5):
     tsret = tsret[tsret.index >= start_date]
 
     return tsret
+
+if __name__ == "__main__":
+    # Create a lagged series of the S&P500 US stock market index
+    snpret = create_lagged_series(
+        "^GSPC", datetime.datetime(2011,1,10),
+        datetime.datetime(2015,12,31), lags=5
+    )
+
+    # Use the prior two days of returns as predictor 
+    # values, with direction as the response
+    X = snpret[["Lag1","Lag2"]]
+    y = snpret["Direction"]
+
+    # The test data is split into two parts: Before and after 1st Jan 2015.
+    start_test = datetime.datetime(2015,1,1)
