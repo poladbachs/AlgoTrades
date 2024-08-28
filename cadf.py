@@ -5,8 +5,8 @@ import matplotlib.dates as mdates
 import pandas as pd
 import yfinance as yf
 import pprint
+import statsmodels.api as sm
 import statsmodels.tsa.stattools as ts
-from pandas.stats.api import ols
 
 # cadf.py
 def plot_price_series(df, ts1, ts2):
@@ -46,3 +46,34 @@ def plot_residuals(df):
     plt.legend()
     plt.plot(df["res"])
     plt.show()
+
+if __name__ == "__main__":
+    start = '2012-1-1'
+    end = '2013-1-1'
+
+    arex = yf.download("AREX", "yahoo", start=start, end=end) 
+    wll = yf.download("WLL", "yahoo", start=start, end=end)
+
+    df = pd.DataFrame(index=arex.index)
+    df["AREX"] = arex["Adj Close"]
+    df["WLL"] = wll["Adj Close"]
+
+    # Plot the two time series
+    plot_price_series(df, "AREX", "WLL")
+
+    # Display a scatter plot of the two time series
+    plot_scatter_series(df, "AREX", "WLL")
+    
+    # Calculate optimal hedge ratio "beta"
+    res = sm(y=df['WLL'], x=df["AREX"])
+    beta_hr = res.beta.x
+
+    # Calculate the residuals of the linear combination
+    df["res"] = df["WLL"] - beta_hr*df["AREX"]
+
+    # Plot the residuals
+    plot_residuals(df)
+
+    # Calculate and output the CADF test on the residuals
+    cadf = ts.adfuller(df["res"])
+    pprint.pprint(cadf)
