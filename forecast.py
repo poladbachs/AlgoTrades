@@ -8,9 +8,9 @@ import sklearn
 import yfinance as yf
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
-from sklearn.lda import LDA
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
+from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis as QDA
 from sklearn.metrics import confusion_matrix
-from sklearn.qda import QDA
 from sklearn.svm import LinearSVC, SVC
 
 def create_lagged_series(symbol, start_date, end_date, lags=5): 
@@ -24,9 +24,9 @@ def create_lagged_series(symbol, start_date, end_date, lags=5):
     """
     # Obtain stock information from Yahoo Finance
     ts = yf.download(
-        symbol, "yahoo",
-        start_date-datetime.timedelta(days=365),
-        end_date 
+        symbol,
+        start=start_date-datetime.timedelta(days=365),
+        end=end_date
     )
 
     # Create the new lagged DataFrame
@@ -45,9 +45,7 @@ def create_lagged_series(symbol, start_date, end_date, lags=5):
 
     # If any of the values of percentage returns equal zero, set them to 
     # a small number (stops issues with QDA model in Scikit-Learn)
-    for i,x in enumerate(tsret["Today"]):
-        if (abs(x) < 0.0001): 
-            tsret["Today"][i] = 0.0001
+    tsret["Today"].replace(0, 0.0001, inplace=True)
 
     # Create the lagged percentage returns columns
     for i in range(0, lags):
@@ -63,8 +61,8 @@ def create_lagged_series(symbol, start_date, end_date, lags=5):
 if __name__ == "__main__":
     # Create a lagged series of the S&P500 US stock market index
     snpret = create_lagged_series(
-        "^GSPC", datetime.datetime(2011,1,10),
-        datetime.datetime(2015,12,31), lags=5
+        "^GSPC", datetime.datetime(2015,1,10),
+        datetime.datetime(2019,12,31), lags=5
     )
 
     # Use the prior two days of returns as predictor 
@@ -72,8 +70,8 @@ if __name__ == "__main__":
     X = snpret[["Lag1","Lag2"]]
     y = snpret["Direction"]
 
-    # The test data is split into two parts: Before and after 1st Jan 2015.
-    start_test = datetime.datetime(2015,1,1)
+    # The test data is split into two parts: Before and after 1st Jan 2019.
+    start_test = datetime.datetime(2019,1,1)
 
     # Create training and test sets
     X_train = X[X.index < start_test]
@@ -96,7 +94,19 @@ if __name__ == "__main__":
               ("RF", RandomForestClassifier(
                 n_estimators=1000, criterion='gini',
                 max_depth=None, min_samples_split=2,
-                min_samples_leaf=1, max_features='auto',
+                min_samples_leaf=1, max_features='sqrt',
                 bootstrap=True, oob_score=False, n_jobs=1,
                 random_state=None, verbose=0)
               )]
+
+    # Iterate through the models
+    for m in models:
+        # Train each of the models on the training set
+        m[1].fit(X_train, y_train)
+
+        # Make an array of predictions on the test set
+        pred = m[1].predict(X_test)
+
+        # Output the hit-rate and the confusion matrix for each model
+        print("%s:\n%0.3f" % (m[0], m[1].score(X_test, y_test))) 
+        print("%s\n" % confusion_matrix(pred, y_test))
