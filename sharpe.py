@@ -13,3 +13,18 @@ def annualised_sharpe(returns, N=252):
     those compared to a benchmark.
     """
     return np.sqrt(N) * returns.mean() / returns.std()
+
+def equity_sharpe(ticker): 
+    """
+    Calculates the annualised Sharpe ratio based on the daily
+    returns of an equity ticker symbol listed in Google Finance.
+
+    The dates have been hardcoded here for brevity. 
+    """
+    start = datetime.datetime(2020,1,1)
+    end = datetime.datetime(2023,1,1)
+
+    # Obtain the equities daily historic data for the desired time period 
+    # and add to a pandas DataFrame
+    pdf = yf.download(ticker, 'google', start=start, end=end)
+
