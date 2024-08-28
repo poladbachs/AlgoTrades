@@ -23,3 +23,11 @@ def plot_price_series(df, ts1, ts2):
     plt.title('%s and %s Daily Prices' % (ts1, ts2))
     plt.legend()
     plt.show()
+
+
+def plot_scatter_series(df, ts1, ts2):
+    plt.xlabel('%s Price ($)' % ts1)
+    plt.ylabel('%s Price ($)' % ts2)
+    plt.title('%s and %s Price Scatterplot' % (ts1, ts2))
+    plt.scatter(df[ts1], df[ts2])
+    plt.show()
