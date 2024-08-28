@@ -22,3 +22,8 @@ gbm = log(cumsum(randn(100000))+1000)
 mr = log(randn(100000)+1000)
 tr = log(cumsum(randn(100000)+1)+1000)
 
+# Output the Hurst Exponent for each of the above series # and the price of Amazon (the Adjusted Close price) for
+# the ADF test given above in the article
+print("Hurst(GBM): %s" % hurst(gbm))
+print("Hurst(MR): %s" % hurst(mr))
+print("Hurst(TR): %s" % hurst(tr))
