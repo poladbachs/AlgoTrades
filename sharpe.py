@@ -39,3 +39,31 @@ def equity_sharpe(ticker):
 
 # For Google, the Sharpe ratio for buying and holding is:
 print(equity_sharpe('GOOG'))
+
+def market_neutral_sharpe(ticker, benchmark): 
+    """
+    Calculates the annualised Sharpe ratio of a market
+    neutral long/short strategy inolving the long of 'ticker' with a corresponding short of the 'benchmark'.
+    """
+    start = datetime.datetime(2000, 1, 1)
+    end = datetime.datetime(2013, 1, 1)
+
+    # Get historic data for both a symbol/ticker and a benchmark ticker
+    tick = yf.download(ticker, start=start, end=end)
+    bench = yf.download(benchmark, start=start, end=end)
+
+    # Calculate the percentage returns on each of the time series
+    tick['daily_ret'] = tick['Close'].pct_change() 
+    bench['daily_ret'] = bench['Close'].pct_change()
+
+    # Create a new DataFrame to store the strategy information
+    # The net returns are (long - short)/2, since there is twice 
+    # the trading capital for this strategy
+    strat = pd.DataFrame(index=tick.index)
+    strat['net_ret'] = (tick['daily_ret'] - bench['daily_ret'])/2.0
+
+    # Return the annualised Sharpe ratio for this strategy
+    return annualised_sharpe(strat['net_ret'])
+
+# For Google, the Sharpe ratio for the long/short market-neutral strategy is
+print(market_neutral_sharpe('GOOG', 'SPY'))
