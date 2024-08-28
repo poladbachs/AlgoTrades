@@ -34,3 +34,12 @@ def create_lagged_series(symbol, start_date, end_date, lags=5):
     tslag["Today"] = ts["Adj Close"]
     tslag["Volume"] = ts["Volume"]
 
+    # Create the shifted lag series of prior trading period close values
+    for i in range(0, lags):
+        tslag["Lag%s" % str(i+1)] = ts["Adj Close"].shift(i+1)
+
+    # Create the returns DataFrame
+    tsret = pd.DataFrame(index=tslag.index) 
+    tsret["Volume"] = tslag["Volume"]
+    tsret["Today"] = tslag["Today"].pct_change()*100.0
+
