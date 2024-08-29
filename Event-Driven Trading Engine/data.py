@@ -194,3 +194,18 @@ class HistoricCSVDataHandler(DataHandler):
             raise 
         else:
             return np.array([getattr(b[1], val_type) for b in bars_list])
+
+    def update_bars(self): 
+        """
+        Pushes the latest bar to the latest_symbol_data structure 
+        for all symbols in the symbol list.
+        """
+        for s in self.symbol_list: 
+            try:
+                bar = next(self._get_new_bar(s)) 
+            except StopIteration:
+                self.continue_backtest = False 
+            else:
+                if bar is not None: 
+                    self.latest_symbol_data[s].append(bar)
+        self.events.put(MarketEvent())
