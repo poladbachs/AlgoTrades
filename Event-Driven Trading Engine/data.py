@@ -131,3 +131,17 @@ class HistoricCSVDataHandler(DataHandler):
         """
         for b in self.symbol_data[symbol]:
             yield b
+
+    def get_latest_bar(self, symbol): 
+        """
+        Returns the last bar from the latest_symbol list.
+        """
+        try:
+            bars_list = self.latest_symbol_data[symbol]
+        except KeyError:
+            print("That symbol is not available in the historical data set.") 
+            raise
+        else:
+            return bars_list[-1]
+
+    
