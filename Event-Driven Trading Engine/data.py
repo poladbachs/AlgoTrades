@@ -124,3 +124,10 @@ class HistoricCSVDataHandler(DataHandler):
         for s in self.symbol_list:
             self.symbol_data[s] = self.symbol_data[s].\
                 reindex(index=comb_index, method='pad').iterrows()
+
+    def _get_new_bar(self, symbol): 
+        """
+        Returns the latest bar from the data feed. 
+        """
+        for b in self.symbol_data[symbol]:
+            yield b
