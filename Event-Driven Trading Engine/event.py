@@ -82,3 +82,22 @@ def print_order(self):
         "Order: Symbol=%s, Type=%s, Quantity=%s, Direction=%s" %
         (self.symbol, self.order_type, self.quantity, self.direction)
     )
+
+class FillEvent(Event): 
+    """
+    Encapsulates the notion of a Filled Order, as returned
+    from a brokerage. Stores the quantity of an instrument
+    actually filled and at what price. In addition, stores
+    the commission of the trade from the brokerage.
+    """
+
+    def __init__(self, timeindex, symbol, exchange, quantity,
+                 direction, fill_cost, commission=None):
+        """
+        Initialises the FillEvent object. Sets the symbol, exchange,
+         quantity, direction, cost of fill and an optional commission.
+        If commission is not provided, the Fill object will
+        calculate it based on the trade size and Interactive
+        Brokers fees.
+        
+        """
