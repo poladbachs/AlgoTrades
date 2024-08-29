@@ -87,3 +87,15 @@ class HistoricCSVDataHandler(DataHandler):
         self.events = events
         self.csv_dir = csv_dir
         self.symbol_list = symbol_list
+
+        self.symbol_data = {}
+        self.latest_symbol_data = {}
+        self.continue_backtest = True
+
+        self._open_convert_csv_files()
+
+    def _open_convert_csv_files(self): 
+        """
+        Opens the CSV files from the data directory, converting
+        them into pandas DataFrames within a symbol dictionary.
+        """
