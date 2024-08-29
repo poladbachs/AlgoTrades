@@ -26,3 +26,11 @@ class DataHandler(object):
         Returns the last bar updated.
         """
         raise NotImplementedError("Should implement get_latest_bar()")
+
+    @abstractmethod
+    def get_latest_bars(self, symbol, N=1):
+        """
+        Returns the last N bars updated.
+        """
+        raise NotImplementedError("Should implement get_latest_bars()")
+
