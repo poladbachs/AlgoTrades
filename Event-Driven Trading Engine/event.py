@@ -67,3 +67,11 @@ class OrderEvent(Event):
         quantity - Non-negative integer for quantity.
         direction - 'BUY' or 'SELL' for long or short.
         """
+
+        self.type = 'ORDER'
+        self.symbol = symbol
+        self.order_type = order_type
+        self.quantity = quantity
+        self.direction = direction
+
+        
