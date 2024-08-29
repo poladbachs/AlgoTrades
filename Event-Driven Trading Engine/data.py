@@ -34,3 +34,10 @@ class DataHandler(object):
         """
         raise NotImplementedError("Should implement get_latest_bars()")
 
+    @abstractmethod
+    def get_latest_bar_datetime(self, symbol):
+        """
+        Returns a Python datetime object for the last bar. 
+        """
+        raise NotImplementedError("Should implement get_latest_bar_datetime()")
+
