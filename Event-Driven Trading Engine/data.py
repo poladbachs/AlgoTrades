@@ -156,3 +156,15 @@ class HistoricCSVDataHandler(DataHandler):
             raise 
         else:
             return bars_list[-N:]
+
+    def get_latest_bar_datetime(self, symbol): 
+        """
+        Returns a Python datetime object for the last bar. 
+        """
+        try:
+            bars_list = self.latest_symbol_data[symbol]
+        except KeyError:
+            print("That symbol is not available in the historical data set.") 
+            raise
+        else:
+            return bars_list[-1][0]
