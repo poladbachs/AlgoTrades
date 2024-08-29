@@ -99,5 +99,12 @@ class FillEvent(Event):
         If commission is not provided, the Fill object will
         calculate it based on the trade size and Interactive
         Brokers fees.
-        
         """
+
+        self.type = 'FILL'
+        self.timeindex = timeindex
+        self.symbol = symbol
+        self.exchange = exchange
+        self.quantity = quantity
+        self.direction = direction
+        self.fill_cost = fill_cost
