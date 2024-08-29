@@ -110,3 +110,12 @@ class HistoricCSVDataHandler(DataHandler):
                     'low', 'close', 'volume', 'adj_close'
                 ]
             ).sort()
+        
+        # Combine the index to pad forward values
+        if comb_index is None:
+            comb_index = self.symbol_data[s].index
+        else: 
+            comb_index.union(self.symbol_data[s].index)
+
+        # Set the latest symbol_data to None
+        self.latest_symbol_data[s] = []
