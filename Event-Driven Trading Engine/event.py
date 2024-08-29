@@ -74,4 +74,11 @@ class OrderEvent(Event):
         self.quantity = quantity
         self.direction = direction
 
-        
+def print_order(self):
+    """
+    Outputs the values within the Order. 
+    """
+    print(
+        "Order: Symbol=%s, Type=%s, Quantity=%s, Direction=%s" %
+        (self.symbol, self.order_type, self.quantity, self.direction)
+    )
