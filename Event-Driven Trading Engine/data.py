@@ -144,4 +144,15 @@ class HistoricCSVDataHandler(DataHandler):
         else:
             return bars_list[-1]
 
-    
+    def get_latest_bars(self, symbol, N=1): 
+        """
+        Returns the last N bars from the latest_symbol list,
+        or N-k if less available. 
+        """
+        try:
+            bars_list = self.latest_symbol_data[symbol] 
+        except KeyError:
+            print("That symbol is not available in the historical data set.")
+            raise 
+        else:
+            return bars_list[-N:]
