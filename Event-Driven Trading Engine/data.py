@@ -41,3 +41,10 @@ class DataHandler(object):
         """
         raise NotImplementedError("Should implement get_latest_bar_datetime()")
 
+    @abstractmethod
+    def get_latest_bar_value(self, symbol, val_type): 
+        """
+        Returns one of the Open, High, Low, Close, Volume or OI from the last bar.
+        """
+        raise NotImplementedError("Should implement get_latest_bar_value()")
+
