@@ -181,3 +181,16 @@ class HistoricCSVDataHandler(DataHandler):
             raise
         else:
             return getattr(bars_list[-1][1], val_type)
+
+    def get_latest_bars_values(self, symbol, val_type, N=1): 
+        """
+        Returns the last N bar values from the latest_symbol list, 
+        or N-k if less available. 
+        """
+        try:
+            bars_list = self.get_latest_bars(symbol, N) 
+        except KeyError:
+            print("That symbol is not available in the historical data set.")
+            raise 
+        else:
+            return np.array([getattr(b[1], val_type) for b in bars_list])
