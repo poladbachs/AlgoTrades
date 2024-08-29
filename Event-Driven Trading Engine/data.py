@@ -168,3 +168,16 @@ class HistoricCSVDataHandler(DataHandler):
             raise
         else:
             return bars_list[-1][0]
+
+    def get_latest_bar_value(self, symbol, val_type):
+        """
+        Returns one of the Open, High, Low, Close, Volume or OI
+        values from the pandas Bar series object.
+        """
+        try:
+            bars_list = self.latest_symbol_data[symbol]
+        except KeyError:
+            print("That symbol is not available in the historical data set.")
+            raise
+        else:
+            return getattr(bars_list[-1][1], val_type)
