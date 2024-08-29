@@ -48,3 +48,11 @@ class DataHandler(object):
         """
         raise NotImplementedError("Should implement get_latest_bar_value()")
 
+    @abstractmethod
+    def get_latest_bars_values(self, symbol, val_type, N=1):
+        """
+        Returns the last N bar values from the
+        latest_symbol list, or N-k if less available. 
+        """
+        raise NotImplementedError("Should implement get_latest_bars_values()")
+
