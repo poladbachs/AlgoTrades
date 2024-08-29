@@ -56,3 +56,11 @@ class DataHandler(object):
         """
         raise NotImplementedError("Should implement get_latest_bars_values()")
 
+    @abstractmethod
+    def update_bars(self):
+        """
+        Pushes the latest bars to the bars_queue for each symbol
+        in a tuple OHLCVI format: (datetime, open, high, low,
+        close, volume, open interest).
+        """
+        raise NotImplementedError("Should implement update_bars()")
