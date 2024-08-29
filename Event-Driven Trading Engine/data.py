@@ -99,3 +99,14 @@ class HistoricCSVDataHandler(DataHandler):
         Opens the CSV files from the data directory, converting
         them into pandas DataFrames within a symbol dictionary.
         """
+        comb_index = None
+        for s in self.symbol_list:
+            # Load the CSV file with no header information, indexed on date
+            self.symbol_data[s] = pd.read_csv(
+                os.path.join(self.csv_dir, '%s.csv' % s),
+                header=0, index_col=0, parse_dates=True,
+                names=[
+                    'datetime', 'open', 'high',
+                    'low', 'close', 'volume', 'adj_close'
+                ]
+            ).sort()
