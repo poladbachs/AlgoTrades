@@ -8,3 +8,14 @@ class Event(object):
     """
     pass
 
+class MarketEvent(Event):
+    """
+    Handles the event of receiving a new market update with
+    corresponding bars.
+    """
+
+    def __init__(self):
+        """
+        Initiliases the MarketEvent.
+        """
+        self.type = 'MARKET'
