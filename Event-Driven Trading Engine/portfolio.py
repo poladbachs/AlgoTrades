@@ -206,3 +206,14 @@ class Portfolio(object):
         if event.type == 'SIGNAL':
             order_event = self.generate_naive_order(event) 
             self.events.put(order_event)
+
+    def create_equity_curve_dataframe(self): 
+        """
+        Creates a pandas DataFrame from the all_holdings
+        list of dictionaries.
+        """
+        curve = pd.DataFrame(self.all_holdings) 
+        curve.set_index('datetime', inplace=True) 
+        curve['returns'] = curve['total'].pct_change() 
+        curve['equity_curve'] = (1.0+curve['returns']).cumprod() 
+        self.equity_curve = curve
