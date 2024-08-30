@@ -110,7 +110,7 @@ class IBExecutionHandler(ExecutionHandler):
     def create_order(self, order_type, quantity, action): 
         """
         Create an Order object (Market/Limit) to go long/short.
-        
+
         order_type - 'MKT', 'LMT' for Market or Limit orders
         quantity - Integral number of assets to order
         action - 'BUY' or 'SELL'
@@ -118,3 +118,5 @@ class IBExecutionHandler(ExecutionHandler):
         order = Order() 
         order.m_orderType = order_type 
         order.m_totalQuantity = quantity
+        order.m_action = action
+        return order
