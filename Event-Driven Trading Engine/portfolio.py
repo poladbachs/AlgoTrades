@@ -82,3 +82,25 @@ class Portfolio(object):
         d['commission'] = 0.0
         d['total'] = self.initial_capital 
         return d
+
+    def update_timeindex(self, event): 
+        """
+        Adds a new record to the positions matrix for the current market data bar.
+        This reflects the PREVIOUS bar, i.e. all current market data at this stage is known (OHLCV).
+        Makes use of a MarketEvent from the events queue. 
+        """
+        latest_datetime = self.bars.get_latest_bar_datetime(
+            self.symbol_list[0]
+        )
+
+
+        # Update positions
+        # ================
+        dp = dict( (k,v) for k, v in [(s, 0) for s in self.symbol_list] ) 
+        dp['datetime'] = latest_datetime
+
+        for s in self.symbol_list:
+            dp[s] = self.current_positions[s]
+
+        # Append the current positions
+        self.all_positions.append(dp)
