@@ -197,3 +197,12 @@ class Portfolio(object):
         if direction == 'EXIT' and cur_quantity < 0:
             order = OrderEvent(symbol, order_type, abs(cur_quantity), 'BUY')
         return order
+
+    def update_signal(self, event): 
+        """
+        Acts on a SignalEvent to generate new orders
+        based on the portfolio logic. 
+        """
+        if event.type == 'SIGNAL':
+            order_event = self.generate_naive_order(event) 
+            self.events.put(order_event)
