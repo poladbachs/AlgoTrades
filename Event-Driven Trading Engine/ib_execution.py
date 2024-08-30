@@ -73,3 +73,17 @@ class IBExecutionHandler(ExecutionHandler):
         # There is scope for more logic here, but we
         # will use "1" as the default for now.
         return 1
+
+    def register_handlers(self): 
+        """
+        Register the error and server reply
+        message handling functions.
+        """
+
+        # Assign the error handling function defined above
+        # to the TWS connection 
+        self.tws_conn.register(self._error_handler, 'Error')
+
+        # Assign all of the server reply messages to the 
+        # reply_handler function defined above 
+        self.tws_conn.registerAll(self._reply_handler)
