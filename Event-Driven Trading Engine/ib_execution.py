@@ -64,3 +64,12 @@ class IBExecutionHandler(ExecutionHandler):
         tws_conn = ibConnection() 
         tws_conn.connect()
         return tws_conn
+
+    def create_initial_order_id(self): 
+        """
+        Creates the initial order ID used for Interactive
+        Brokers to keep track of submitted orders.
+        """
+        # There is scope for more logic here, but we
+        # will use "1" as the default for now.
+        return 1
