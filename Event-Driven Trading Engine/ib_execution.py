@@ -36,3 +36,19 @@ class IBExecutionHandler(ExecutionHandler):
         """
         # Currently no error handling. 
         print("Server Error: %s" % msg)
+
+    def _reply_handler(self, msg): 
+        """
+        Handles of server replies
+        """
+        # Handle open order orderId processing
+        if msg.typeName == "openOrder" and \
+            msg.orderId == self.order_id and \
+            not self.fill_dict.has_key(msg.orderId): 
+            self.create_fill_dict_entry(msg)
+        # Handle Fills
+        if msg.typeName == "orderStatus" and \
+            msg.status == "Filled" and \
+            self.fill_dict[msg.orderId]["filled"] == False: 
+            self.create_fill(msg)
+        print("Server Response: %s, %s\n" % (msg.typeName, msg))
