@@ -138,3 +138,25 @@ class Portfolio(object):
             fill_dir = -1
         # Update positions list with new quantities
         self.current_positions[fill.symbol] += fill_dir*fill.quantity
+
+
+    def update_holdings_from_fill(self, fill): 
+        """
+        Takes a Fill object and updates the holdings matrix to
+        reflect the holdings value.
+        Parameters:
+        fill - The Fill object to update the holdings with. 
+        """
+        # Check whether the fill is a buy or sell
+        fill_dir = 0
+        if fill.direction == 'BUY': 
+            fill_dir = 1
+        if fill.direction == 'SELL': 
+            fill_dir = -1
+            
+        # Update holdings list with new quantities
+        fill_cost = self.bars.get_latest_bar_value(fill.symbol, "adj_close") 
+        cost = fill_dir * fill_cost * fill.quantity 
+        self.current_holdings[fill.symbol] += cost 
+        self.current_holdings['commission'] += fill.commission 
+        self.current_holdings['cash'] -= (cost + fill.commission)
