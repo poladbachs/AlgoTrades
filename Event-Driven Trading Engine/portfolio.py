@@ -217,3 +217,15 @@ class Portfolio(object):
         curve['returns'] = curve['total'].pct_change() 
         curve['equity_curve'] = (1.0+curve['returns']).cumprod() 
         self.equity_curve = curve
+
+    def output_summary_stats(self):
+        """
+        Creates a list of summary statistics for the portfolio. 
+        """
+        
+        total_return = self.equity_curve['equity_curve'][-1]
+        returns = self.equity_curve['returns']
+        pnl = self.equity_curve['equity_curve']
+        sharpe_ratio = create_sharpe_ratio(returns, periods=252*60*6.5) 
+        drawdown, max_dd, dd_duration = create_drawdowns(pnl) 
+        self.equity_curve['drawdown'] = drawdown
