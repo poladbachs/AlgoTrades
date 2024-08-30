@@ -29,3 +29,10 @@ class IBExecutionHandler(ExecutionHandler):
         self.tws_conn = self.create_tws_connection() 
         self.order_id = self.create_initial_order_id()
         self.register_handlers()
+
+    def _error_handler(self, msg): 
+        """
+        Handles the capturing of error messages 
+        """
+        # Currently no error handling. 
+        print("Server Error: %s" % msg)
