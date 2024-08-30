@@ -71,3 +71,14 @@ class Portfolio(object):
         d['commission'] = 0.0
         d['total'] = self.initial_capital
         return [d]
+
+    def construct_current_holdings(self):
+        """
+        This constructs the dictionary which will hold 
+        the instantaneous value of the portfolio across all symbols.
+        """
+        d = dict( (k,v) for k, v in [(s, 0.0) for s in self.symbol_list] ) 
+        d['cash'] = self.initial_capital
+        d['commission'] = 0.0
+        d['total'] = self.initial_capital 
+        return d
