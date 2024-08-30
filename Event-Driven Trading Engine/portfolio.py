@@ -153,10 +153,11 @@ class Portfolio(object):
             fill_dir = 1
         if fill.direction == 'SELL': 
             fill_dir = -1
-            
+
         # Update holdings list with new quantities
         fill_cost = self.bars.get_latest_bar_value(fill.symbol, "adj_close") 
         cost = fill_dir * fill_cost * fill.quantity 
         self.current_holdings[fill.symbol] += cost 
         self.current_holdings['commission'] += fill.commission 
         self.current_holdings['cash'] -= (cost + fill.commission)
+        self.current_holdings['total'] -= (cost + fill.commission)
