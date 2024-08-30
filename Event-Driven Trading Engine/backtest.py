@@ -66,3 +66,18 @@ class Backtest(object):
                                             self.start_date, 
                                             self.initial_capital) 
         self.execution_handler = self.execution_handler_cls(self.events)
+
+    def _run_backtest(self): 
+        """
+        Executes the backtest. 
+        """
+        i = 0
+        while True:
+            i += 1 
+            print(i)
+
+            # Update the market bars
+            if self.data_handler.continue_backtest:
+                self.data_handler.update_bars()
+            else: 
+                break
