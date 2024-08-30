@@ -52,3 +52,15 @@ class IBExecutionHandler(ExecutionHandler):
             self.fill_dict[msg.orderId]["filled"] == False: 
             self.create_fill(msg)
         print("Server Response: %s, %s\n" % (msg.typeName, msg))
+
+    def create_tws_connection(self): 
+        """
+        Connect to the Trader Workstation (TWS) running on the
+        usual port of 7496, with a clientId of 10.
+        The clientId is chosen by us and we will need
+        separate IDs for both the execution connection and
+        market data connection, if the latter is used elsewhere.
+        """
+        tws_conn = ibConnection() 
+        tws_conn.connect()
+        return tws_conn
