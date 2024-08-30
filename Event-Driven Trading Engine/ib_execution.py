@@ -120,3 +120,17 @@ class IBExecutionHandler(ExecutionHandler):
         order.m_totalQuantity = quantity
         order.m_action = action
         return order
+
+    def create_fill_dict_entry(self, msg): 
+        """
+        Creates an entry in the Fill Dictionary that lists
+        orderIds and provides security information. This is
+        needed for the event-driven behaviour of the IB
+        server message behaviour.
+        """
+        self.fill_dict[msg.orderId] = {
+            "symbol": msg.contract.m_symbol,
+            "exchange": msg.contract.m_exchange,
+            "direction": msg.order.m_action,
+            "filled": False
+        }
