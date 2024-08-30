@@ -122,3 +122,19 @@ class Portfolio(object):
 
         # Append the current holdings
         self.all_holdings.append(dh)
+
+    
+    def update_positions_from_fill(self, fill):
+        """
+        Takes a Fill object and updates the position matrix to
+        reflect the new position.
+        Parameters:
+        fill - The Fill object to update the positions with.
+        """
+        # Check whether the fill is a buy or sell fill_dir = 0
+        if fill.direction == 'BUY':
+            fill_dir = 1
+        if fill.direction == 'SELL':
+            fill_dir = -1
+        # Update positions list with new quantities
+        self.current_positions[fill.symbol] += fill_dir*fill.quantity
