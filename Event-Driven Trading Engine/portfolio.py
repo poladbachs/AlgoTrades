@@ -104,3 +104,21 @@ class Portfolio(object):
 
         # Append the current positions
         self.all_positions.append(dp)
+
+        # Update holdings
+        # ===============
+        dh = dict( (k,v) for k, v in [(s, 0) for s in self.symbol_list] ) 
+        dh['datetime'] = latest_datetime
+        dh['cash'] = self.current_holdings['cash']
+        dh['commission'] = self.current_holdings['commission'] 
+        dh['total'] = self.current_holdings['cash']
+
+        for s in self.symbol_list:
+            # Approximation to the real value 
+            market_value = self.current_positions[s] * \
+                self.bars.get_latest_bar_value(s, "adj_close")
+            dh[s] = market_value
+            dh['total'] += market_value
+
+        # Append the current holdings
+        self.all_holdings.append(dh)
