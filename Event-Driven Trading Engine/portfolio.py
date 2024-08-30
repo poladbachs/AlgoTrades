@@ -50,3 +50,12 @@ class Portfolio(object):
             [(s, 0) for s in self.symbol_list] )
         self.all_holdings = self.construct_all_holdings() 
         self.current_holdings = self.construct_current_holdings()
+
+    def construct_all_positions(self): 
+        """
+        Constructs the positions list using the start_date
+        to determine when the time index will begin.
+        """
+        d = dict( (k,v) for k, v in [(s, 0) for s in self.symbol_list] ) 
+        d['datetime'] = self.start_date
+        return [d]
