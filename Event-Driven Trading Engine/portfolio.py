@@ -59,3 +59,15 @@ class Portfolio(object):
         d = dict( (k,v) for k, v in [(s, 0) for s in self.symbol_list] ) 
         d['datetime'] = self.start_date
         return [d]
+
+    def construct_all_holdings(self): 
+        """
+        Constructs the holdings list using the start_date
+        to determine when the time index will begin.
+        """
+        d = dict( (k,v) for k, v in [(s, 0.0) for s in self.symbol_list] ) 
+        d['datetime'] = self.start_date
+        d['cash'] = self.initial_capital
+        d['commission'] = 0.0
+        d['total'] = self.initial_capital
+        return [d]
