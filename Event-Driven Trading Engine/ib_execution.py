@@ -92,7 +92,7 @@ class IBExecutionHandler(ExecutionHandler):
         """
         Create a Contract object defining what will
         be purchased, at which exchange and in which currency.
-        
+
         symbol - The ticker symbol for the contract
         sec_type - The security type for the contract ('STK' is 'stock')
         exch - The exchange to carry out the contract on
@@ -106,3 +106,15 @@ class IBExecutionHandler(ExecutionHandler):
         contract.m_primaryExch = prim_exch
         contract.m_currency = curr
         return contract
+
+    def create_order(self, order_type, quantity, action): 
+        """
+        Create an Order object (Market/Limit) to go long/short.
+        
+        order_type - 'MKT', 'LMT' for Market or Limit orders
+        quantity - Integral number of assets to order
+        action - 'BUY' or 'SELL'
+        """
+        order = Order() 
+        order.m_orderType = order_type 
+        order.m_totalQuantity = quantity
