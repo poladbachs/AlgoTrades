@@ -87,3 +87,22 @@ class IBExecutionHandler(ExecutionHandler):
         # Assign all of the server reply messages to the 
         # reply_handler function defined above 
         self.tws_conn.registerAll(self._reply_handler)
+
+    def create_contract(self, symbol, sec_type, exch, prim_exch, curr):
+        """
+        Create a Contract object defining what will
+        be purchased, at which exchange and in which currency.
+        
+        symbol - The ticker symbol for the contract
+        sec_type - The security type for the contract ('STK' is 'stock')
+        exch - The exchange to carry out the contract on
+        prim_exch - The primary exchange to carry out the contract on 
+        curr - The currency in which to purchase the contract
+        """
+        contract = Contract()
+        contract.m_symbol = symbol
+        contract.m_secType = sec_type
+        contract.m_exchange = exch
+        contract.m_primaryExch = prim_exch
+        contract.m_currency = curr
+        return contract
