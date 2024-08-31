@@ -2,18 +2,22 @@ from __future__ import print_function
 
 import datetime
 
+import sys
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
 import yfinance as yf
 import os
+import sys
 
-from trading_engine.strategy import Strategy
-from trading_engine.event import SignalEvent
-from trading_engine.backtest import Backtest
-from trading_engine.data import HistoricCSVDataHandler
-from trading_engine.execution import SimulatedExecutionHandler
-from trading_engine.portfolio import Portfolio
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'trading_engine')))
+
+from strategy import Strategy
+from event import SignalEvent
+from backtest import Backtest
+from data import HistoricCSVDataHandler
+from execution import SimulatedExecutionHandler
+from portfolio import Portfolio
 
 class MovingAverageCrossStrategy(Strategy): 
     """
@@ -87,27 +91,27 @@ class MovingAverageCrossStrategy(Strategy):
                     self.events.put(signal)
                     self.bought[s] = 'OUT'
 
-    if __name__ == "__main__":
-        # Specify the directory where the CSV will be saved
-        csv_dir = '/Users/polad/AlgoTrades/trading_strategies'
-        csv_file = os.path.join(csv_dir, 'AAPL.csv')
+if __name__ == "__main__":
+    # Specify the directory where the CSV will be saved
+    csv_dir = '/Users/polad/AlgoTrades/trading_strategies'
+    csv_file = os.path.join(csv_dir, 'AAPL.csv')
 
-        aapl_data = yf.download('AAPL', start='1990-01-01', end='2002-01-01')
+    aapl_data = yf.download('AAPL', start='1990-01-01', end='2002-01-01')
 
-        # Save the data to a CSV file
-        aapl_data.to_csv(csv_file)
+    # Save the data to a CSV file
+    aapl_data.to_csv(csv_file)
 
-        # Set up parameters for the backtest
-        symbol_list = ['AAPL']
-        initial_capital = 100000.0
-        heartbeat = 0.0
-        start_date = datetime.datetime(1990, 1, 1, 0, 0, 0)
+    # Set up parameters for the backtest
+    symbol_list = ['AAPL']
+    initial_capital = 100000.0
+    heartbeat = 0.0
+    start_date = datetime.datetime(1990, 1, 1, 0, 0, 0)
 
-        # Create a Backtest instance and run the backtest
-        backtest = Backtest(
-            csv_dir, symbol_list, initial_capital, heartbeat,
-            start_date, HistoricCSVDataHandler, SimulatedExecutionHandler,
-            Portfolio, MovingAverageCrossStrategy
-        )
-        backtest.simulate_trading()
+    # Create a Backtest instance and run the backtest
+    backtest = Backtest(
+        csv_dir, symbol_list, initial_capital, heartbeat,
+        start_date, HistoricCSVDataHandler, SimulatedExecutionHandler,
+        Portfolio, MovingAverageCrossStrategy
+    )
+    backtest.simulate_trading()
 
