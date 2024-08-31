@@ -134,3 +134,30 @@ class IBExecutionHandler(ExecutionHandler):
             "direction": msg.order.m_action,
             "filled": False
         }
+    
+    def create_fill(self, msg): 
+        """
+        Handles the creation of the FillEvent that will be
+        placed onto the events queue subsequent to an order
+        being filled.
+        """
+        fd = self.fill_dict[msg.orderId]
+
+        # Prepare the fill data
+        symbol = fd["symbol"]
+        exchange = fd["exchange"]
+        filled = msg.filled
+        direction = fd["direction"]
+        fill_cost = msg.avgFillPrice
+
+        # Create a fill event object
+        fill = FillEvent(
+            datetime.datetime.utcnow(), symbol,
+            exchange, filled, direction, fill_cost
+        )
+        
+        # Make sure that multiple messages don't create
+        # additional fills.
+        self.fill_dict[msg.orderId]["filled"] = True
+        # Place the fill event onto the event queue
+        self.events.put(fill_event)
