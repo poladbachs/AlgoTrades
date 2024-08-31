@@ -49,3 +49,25 @@ class MovingAverageCrossStrategy(Strategy):
         for s in self.symbol_list: 
             bought[s] = 'OUT'
         return bought
+
+    def calculate_signals(self, event): 
+        """
+        Generates a new set of signals based on the MAC
+        SMA with the short window crossing the long window 
+        meaning a long entry and vice versa for a short entry.
+        Parameters
+        event - A MarketEvent object.
+        """
+        if event.type == 'MARKET':
+            for s in self.symbol_list:
+                bars = self.bars.get_latest_bars_values(
+                    s, "adj_close", N=self.long_window
+                )
+                bar_date = self.bars.get_latest_bar_datetime(s)
+                if bars is not None and bars != []:
+                    short_sma = np.mean(bars[-self.short_window:]) 
+                    long_sma = np.mean(bars[-self.long_window:])
+
+                    symbol = s
+                    dt = datetime.datetime.utcnow()
+                    sig_dir = ""
