@@ -71,3 +71,16 @@ class MovingAverageCrossStrategy(Strategy):
                     symbol = s
                     dt = datetime.datetime.utcnow()
                     sig_dir = ""
+
+                if short_sma > long_sma and self.bought[s] == "OUT": 
+                    print("LONG: %s" % bar_date)
+                    sig_dir = 'LONG'
+                    signal = SignalEvent(1, symbol, dt, sig_dir, 1.0)
+                    self.events.put(signal)
+                    self.bought[s] = 'LONG'
+                elif short_sma < long_sma and self.bought[s] == "LONG":
+                    print("SHORT: %s" % bar_date)
+                    sig_dir = 'EXIT'
+                    signal = SignalEvent(1, symbol, dt, sig_dir, 1.0)
+                    self.events.put(signal)
+                    self.bought[s] = 'OUT'
