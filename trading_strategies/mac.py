@@ -5,6 +5,7 @@ import datetime
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
+import yfinance as yf
 
 from trading_engine.strategy import Strategy
 from trading_engine.event import SignalEvent
@@ -84,3 +85,13 @@ class MovingAverageCrossStrategy(Strategy):
                     signal = SignalEvent(1, symbol, dt, sig_dir, 1.0)
                     self.events.put(signal)
                     self.bought[s] = 'OUT'
+
+    if __name__ == "__main__":
+        # Specify the directory where the CSV will be saved
+        csv_dir = '/Users/polad/AlgoTrades/trading_strategies'
+        csv_file = os.path.join(csv_dir, 'AAPL.csv')
+
+        aapl_data = yf.download('AAPL', start='1990-01-01', end='2002-01-01')
+
+        # Save the data to a CSV file
+        aapl_data.to_csv(csv_file)
