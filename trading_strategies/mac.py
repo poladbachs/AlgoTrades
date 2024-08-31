@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 import statsmodels.api as sm
 import yfinance as yf
+import os
 
 from trading_engine.strategy import Strategy
 from trading_engine.event import SignalEvent
@@ -95,3 +96,18 @@ class MovingAverageCrossStrategy(Strategy):
 
         # Save the data to a CSV file
         aapl_data.to_csv(csv_file)
+
+        # Set up parameters for the backtest
+        symbol_list = ['AAPL']
+        initial_capital = 100000.0
+        heartbeat = 0.0
+        start_date = datetime.datetime(1990, 1, 1, 0, 0, 0)
+
+        # Create a Backtest instance and run the backtest
+        backtest = Backtest(
+            csv_dir, symbol_list, initial_capital, heartbeat,
+            start_date, HistoricCSVDataHandler, SimulatedExecutionHandler,
+            Portfolio, MovingAverageCrossStrategy
+        )
+        backtest.simulate_trading()
+
