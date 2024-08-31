@@ -180,3 +180,10 @@ class IBExecutionHandler(ExecutionHandler):
             order_type = event.order_type
             quantity = event.quantity
             direction = event.direction
+
+            # Create the Interactive Brokers contract via the 
+            # passed Order event
+            ib_contract = self.create_contract(
+                asset, asset_type, self.order_routing,
+                self.order_routing, self.currency
+            )
