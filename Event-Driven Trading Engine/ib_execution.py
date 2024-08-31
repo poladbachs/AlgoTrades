@@ -155,9 +155,28 @@ class IBExecutionHandler(ExecutionHandler):
             datetime.datetime.utcnow(), symbol,
             exchange, filled, direction, fill_cost
         )
-        
+
         # Make sure that multiple messages don't create
         # additional fills.
         self.fill_dict[msg.orderId]["filled"] = True
         # Place the fill event onto the event queue
         self.events.put(fill_event)
+
+    def execute_order(self, event): 
+        """
+        Creates the necessary InteractiveBrokers order object
+        and submits it to IB via their API.
+        The results are then queried in order to generate a
+        corresponding Fill object, which is placed back on
+        the event queue.
+        Parameters:
+        event - Contains an Event object with order information. 
+        """
+
+        if event.type == 'ORDER':
+            # Prepare the parameters for the asset order
+            asset = event.symbol
+            asset_type = "STK"
+            order_type = event.order_type
+            quantity = event.quantity
+            direction = event.direction
