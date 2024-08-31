@@ -39,3 +39,13 @@ class MovingAverageCrossStrategy(Strategy):
 
         # Set to True if a symbol is in the market
         self.bought = self._calculate_initial_bought()
+
+    def _calculate_initial_bought(self): 
+        """
+        Adds keys to the bought dictionary for all symbols 
+        and sets them to 'OUT'.
+        """
+        bought = {}
+        for s in self.symbol_list: 
+            bought[s] = 'OUT'
+        return bought
