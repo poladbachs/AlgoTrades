@@ -187,3 +187,14 @@ class IBExecutionHandler(ExecutionHandler):
                 asset, asset_type, self.order_routing,
                 self.order_routing, self.currency
             )
+
+            # Create the Interactive Brokers order via the 
+            # passed Order event
+            ib_order = self.create_order(
+                order_type, quantity, direction
+            )
+
+            # Use the connection to the send the order to IB
+            self.tws_conn.placeOrder(
+                self.order_id, ib_contract, ib_order
+            )
