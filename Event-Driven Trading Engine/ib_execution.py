@@ -198,3 +198,10 @@ class IBExecutionHandler(ExecutionHandler):
             self.tws_conn.placeOrder(
                 self.order_id, ib_contract, ib_order
             )
+
+            # NOTE: This following line is crucial. 
+            # It ensures the order goes through! 
+            time.sleep(1)
+
+            # Increment the order ID for this session
+            self.order_id += 1
