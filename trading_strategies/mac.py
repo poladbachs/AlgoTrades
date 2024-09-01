@@ -70,7 +70,7 @@ class MovingAverageCrossStrategy(Strategy):
                     s, "adj_close", N=self.long_window
                 )
                 bar_date = self.bars.get_latest_bar_datetime(s)
-                if bars is not None and bars != []:
+                if bars is not None and len(bars) >= self.long_window:
                     short_sma = np.mean(bars[-self.short_window:]) 
                     long_sma = np.mean(bars[-self.long_window:])
 
@@ -78,18 +78,18 @@ class MovingAverageCrossStrategy(Strategy):
                     dt = datetime.datetime.utcnow()
                     sig_dir = ""
 
-                if short_sma > long_sma and self.bought[s] == "OUT": 
-                    print("LONG: %s" % bar_date)
-                    sig_dir = 'LONG'
-                    signal = SignalEvent(1, symbol, dt, sig_dir, 1.0)
-                    self.events.put(signal)
-                    self.bought[s] = 'LONG'
-                elif short_sma < long_sma and self.bought[s] == "LONG":
-                    print("SHORT: %s" % bar_date)
-                    sig_dir = 'EXIT'
-                    signal = SignalEvent(1, symbol, dt, sig_dir, 1.0)
-                    self.events.put(signal)
-                    self.bought[s] = 'OUT'
+                    if short_sma > long_sma and self.bought[s] == "OUT": 
+                        print("LONG: %s" % bar_date)
+                        sig_dir = 'LONG'
+                        signal = SignalEvent(1, symbol, dt, sig_dir, 1.0)
+                        self.events.put(signal)
+                        self.bought[s] = 'LONG'
+                    elif short_sma < long_sma and self.bought[s] == "LONG":
+                        print("SHORT: %s" % bar_date)
+                        sig_dir = 'EXIT'
+                        signal = SignalEvent(1, symbol, dt, sig_dir, 1.0)
+                        self.events.put(signal)
+                        self.bought[s] = 'OUT'
 
 if __name__ == "__main__":
     # Specify the directory where the CSV will be saved
