@@ -131,7 +131,8 @@ class Portfolio(object):
         Parameters:
         fill - The Fill object to update the positions with.
         """
-        # Check whether the fill is a buy or sell fill_dir = 0
+        # Check whether the fill is a buy or sell 
+        fill_dir = 0
         if fill.direction == 'BUY':
             fill_dir = 1
         if fill.direction == 'SELL':
@@ -192,6 +193,7 @@ class Portfolio(object):
             order = OrderEvent(symbol, order_type, mkt_quantity, 'BUY')
         if direction == 'SHORT' and cur_quantity == 0:
             order = OrderEvent(symbol, order_type, mkt_quantity, 'SELL')
+
         if direction == 'EXIT' and cur_quantity > 0:
             order = OrderEvent(symbol, order_type, abs(cur_quantity), 'SELL')
         if direction == 'EXIT' and cur_quantity < 0:
@@ -223,7 +225,7 @@ class Portfolio(object):
         Creates a list of summary statistics for the portfolio. 
         """
 
-        total_return = self.equity_curve['equity_curve'][-1]
+        total_return = self.equity_curve['equity_curve'].iloc[-1]
         returns = self.equity_curve['returns']
         pnl = self.equity_curve['equity_curve']
         sharpe_ratio = create_sharpe_ratio(returns, periods=252*60*6.5) 
