@@ -2,15 +2,11 @@ from __future__ import print_function
 
 import datetime
 
-import sys
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
-import yfinance as yf
 import os
-import sys
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'trading_engine')))
+import yfinance as yf
 
 from strategy import Strategy
 from event import SignalEvent
@@ -19,14 +15,16 @@ from data import HistoricCSVDataHandler
 from execution import SimulatedExecutionHandler
 from portfolio import Portfolio
 
-class MovingAverageCrossStrategy(Strategy): 
+
+class MovingAverageCrossStrategy(Strategy):
     """
-    Carries out a basic Moving Average Crossover strategy 
-    with a short/long simple weighted moving average. 
-    Default short/long windows are 100/400 periods respectively.
+    Carries out a basic Moving Average Crossover strategy with a
+    short/long simple weighted moving average. Default short/long
+    windows are 100/400 periods respectively.
     """
+
     def __init__(
-        self, bars, events, short_window=100, long_window=400 
+        self, bars, events, short_window=100, long_window=400
     ):
         """
         Initialises the Moving Average Cross Strategy.
@@ -46,23 +44,24 @@ class MovingAverageCrossStrategy(Strategy):
         # Set to True if a symbol is in the market
         self.bought = self._calculate_initial_bought()
 
-    def _calculate_initial_bought(self): 
+    def _calculate_initial_bought(self):
         """
-        Adds keys to the bought dictionary for all symbols 
+        Adds keys to the bought dictionary for all symbols
         and sets them to 'OUT'.
         """
         bought = {}
-        for s in self.symbol_list: 
+        for s in self.symbol_list:
             bought[s] = 'OUT'
         return bought
 
-    def calculate_signals(self, event): 
+    def calculate_signals(self, event):
         """
         Generates a new set of signals based on the MAC
-        SMA with the short window crossing the long window 
-        meaning a long entry and vice versa for a short entry.
+        SMA with the short window crossing the long window
+        meaning a long entry and vice versa for a short entry.    
+
         Parameters
-        event - A MarketEvent object.
+        event - A MarketEvent object. 
         """
         if event.type == 'MARKET':
             for s in self.symbol_list:
@@ -78,7 +77,7 @@ class MovingAverageCrossStrategy(Strategy):
                     dt = datetime.datetime.utcnow()
                     sig_dir = ""
 
-                    if short_sma > long_sma and self.bought[s] == "OUT": 
+                    if short_sma > long_sma and self.bought[s] == "OUT":
                         print("LONG: %s" % bar_date)
                         sig_dir = 'LONG'
                         signal = SignalEvent(1, symbol, dt, sig_dir, 1.0)
@@ -91,9 +90,10 @@ class MovingAverageCrossStrategy(Strategy):
                         self.events.put(signal)
                         self.bought[s] = 'OUT'
 
+
 if __name__ == "__main__":
     # Specify the directory where the CSV will be saved
-    csv_dir = '/Users/polad/AlgoTrades/trading_strategies'
+    csv_dir = '/Users/polad/AlgoTrades/trading_engine'
     csv_file = os.path.join(csv_dir, 'AAPL.csv')
 
     aapl_data = yf.download('AAPL', start='1990-01-01', end='2002-01-01')
@@ -107,11 +107,9 @@ if __name__ == "__main__":
     heartbeat = 0.0
     start_date = datetime.datetime(1990, 1, 1, 0, 0, 0)
 
-    # Create a Backtest instance and run the backtest
     backtest = Backtest(
-        csv_dir, symbol_list, initial_capital, heartbeat,
-        start_date, HistoricCSVDataHandler, SimulatedExecutionHandler,
+        csv_dir, symbol_list, initial_capital, heartbeat, 
+        start_date, HistoricCSVDataHandler, SimulatedExecutionHandler, 
         Portfolio, MovingAverageCrossStrategy
     )
     backtest.simulate_trading()
-
