@@ -1,3 +1,5 @@
+
+
 from __future__ import print_function
 
 from abc import ABCMeta, abstractmethod
@@ -123,7 +125,7 @@ class HistoricCSVDataHandler(DataHandler):
                     'low', 'close', 'volume', 'adj_close'
                 ]
             ).sort_index()
-        
+
             # Combine the index to pad forward values
             if comb_index is None:
                 comb_index = self.symbol_data[s].index
