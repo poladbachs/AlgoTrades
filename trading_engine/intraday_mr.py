@@ -41,6 +41,50 @@ class IntradayOLSMRStrategy(Strategy):
         self.zscore_high = zscore_high
         self.pair = ('AREX', 'WLL')
         self.datetime = datetime.datetime.utcnow()
-        
+
         self.long_market = False
         self.short_market = False
+
+    def calculate_xy_signals(self, zscore_last): 
+        """
+        Calculates the actual x, y signal pairings
+        to be sent to the signal generator.
+        Parameters
+        zscore_last - The current zscore to test against 
+        """
+        y_signal = None
+        x_signal = None
+        p0 = self.pair[0]
+        p1 = self.pair[1]
+        dt = self.datetime
+        hr = abs(self.hedge_ratio)
+
+        # If we're long the market and below the
+        # negative of the high zscore threshold
+        if zscore_last <= -self.zscore_high and not self.long_market:
+            self.long_market = True
+            y_signal = SignalEvent(1, p0, dt, 'LONG', 1.0)
+            x_signal = SignalEvent(1, p1, dt, 'SHORT', hr)
+
+        # If we're long the market and between the
+        # absolute value of the low zscore threshold
+        if abs(zscore_last) <= self.zscore_low and self.long_market:
+            self.long_market = False
+            y_signal = SignalEvent(1, p0, dt, 'EXIT', 1.0)
+            x_signal = SignalEvent(1, p1, dt, 'EXIT', 1.0)
+
+        # If we're short the market and above
+        # the high zscore threshold
+        if zscore_last >= self.zscore_high and not self.short_market:
+            self.short_market = True
+            y_signal = SignalEvent(1, p0, dt, 'SHORT', 1.0)
+            x_signal = SignalEvent(1, p1, dt, 'LONG', hr)
+
+        # If we're short the market and between the
+        # absolute value of the low zscore threshold
+        if abs(zscore_last) <= self.zscore_low and self.short_market:
+            self.short_market = False
+            y_signal = SignalEvent(1, p0, dt, 'EXIT', 1.0)
+            x_signal = SignalEvent(1, p1, dt, 'EXIT', 1.0)
+
+        return y_signal, x_signal
