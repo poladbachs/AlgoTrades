@@ -120,3 +120,10 @@ class IntradayOLSMRStrategy(Strategy):
                 if y_signal is not None and x_signal is not None:
                     self.events.put(y_signal)
                     self.events.put(x_signal)
+
+    def calculate_signals(self, event):
+        """
+        Calculate the SignalEvents based on market data. 
+        """
+        if event.type == 'MARKET':
+            self.calculate_signals_for_pairs()
