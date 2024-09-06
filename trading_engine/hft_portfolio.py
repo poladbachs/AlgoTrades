@@ -204,7 +204,7 @@ class PortfolioHFT(object):
         direction = signal.signal_type
         strength = signal.strength
 
-        mkt_quantity = 100
+        mkt_quantity = 2000
         cur_quantity = self.current_positions[symbol]
         order_type = 'MKT'
 
