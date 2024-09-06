@@ -28,8 +28,8 @@ class IntradayOLSMRStrategy(Strategy):
     """
     
     def __init__(
-        self, bars, events, ols_window=100, 
-        zscore_low=0.5, zscore_high=3.0
+        self, bars, events, ols_window=50, 
+        zscore_low=0.5, zscore_high=1.0
     ):
         """
         Initialises the stat arb strategy.
@@ -118,7 +118,7 @@ class IntradayOLSMRStrategy(Strategy):
             if len(y) >= self.ols_window and len(x) >= self.ols_window:
                 # Calculate the current hedge ratio using  OLS
                 model = sm.OLS(y, sm.add_constant(x)).fit()
-                self.hedge_ratio = model.params[0]
+                self.hedge_ratio = model.params[1]
 
                 # Calculate the current z-score of the residuals
                 spread = y - self.hedge_ratio * x
