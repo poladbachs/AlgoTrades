@@ -88,3 +88,35 @@ class IntradayOLSMRStrategy(Strategy):
             x_signal = SignalEvent(1, p1, dt, 'EXIT', 1.0)
 
         return y_signal, x_signal
+
+    def calculate_signals_for_pairs(self): 
+        """
+        Generates a new set of signals based 
+        on the mean reversion strategy.
+        Calculates the hedge ratio between the pair of tickers. 
+        We use OLS for this, althought we should ideall use CADF. 
+        """
+        # Obtain the latest window of values for each
+        # component of the pair of tickers
+        y = self.bars.get_latest_bars_values(
+            self.pair[0], "close", N=self.ols_window
+        )
+        x = self.bars.get_latest_bars_values(
+            self.pair[1], "close", N=self.ols_window
+        )
+
+        if y is not None and x is not None:
+            # Check that all window periods are available
+            if len(y) >= self.ols_window and len(x) >= self.ols_window:
+                # Calculate the current hedge ratio using  OLS
+                self.hedge_ratio = sm.OLS(y, x).fit().params[0]
+
+                # Calculate the current z-score of the residuals
+                spread = y - self.hedge_ratio * x
+                zscore_last = ((spread - spread.mean())/spread.std())[-1]
+
+                # Calculate signals and add to events queue
+                y_signal, x_signal = self.calculate_xy_signals(zscore_last) 
+                if y_signal is not None and x_signal is not None:
+                    self.events.put(y_signal)
+                    self.events.put(x_signal)
