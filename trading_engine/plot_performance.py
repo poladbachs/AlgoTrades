@@ -14,3 +14,21 @@ if __name__ == "__main__":
     fig = plt.figure()
     # Set the outer colour to white
     fig.patch.set_facecolor('white')
+
+    # Plot the equity curve
+    ax1 = fig.add_subplot(311, ylabel='Portfolio value, %')
+    data['equity_curve'].plot(ax=ax1, color="blue", lw=2.)
+    plt.grid(True)
+
+    # Plot the returns
+    ax2 = fig.add_subplot(312, ylabel='Period returns, %') 
+    data['returns'].plot(ax=ax2, color="black", lw=2.) 
+    plt.grid(True)
+
+    # Plot the drawdowns
+    ax3 = fig.add_subplot(313, ylabel='Drawdowns, %') 
+    data['drawdown'].plot(ax=ax3, color="red", lw=2.) 
+    plt.grid(True)
+
+    # plot the figure
+    plt.show()
